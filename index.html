@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,14 +10,14 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #121212;
+            background-color: #15202b; /* Fond sombre */
             color: #fff;
         }
         .container {
-            max-width: 800px;
-            margin: 50px auto;
+            max-width: 100%;
+            margin: 0 auto;
             padding: 20px;
-            background-color: #1f1f1f;
+            background-color: #192734; /* Fond légèrement plus clair */
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         }
@@ -30,22 +29,30 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+        }
+        .tabs::-webkit-scrollbar { /* WebKit */
+            display: none;
         }
         .tab {
             flex-grow: 1;
             text-align: center;
             padding: 10px;
-            background-color: #444;
+            background-color: #15202b; /* Fond sombre */
             border-radius: 5px 5px 0 0;
             cursor: pointer;
+            border-bottom: 2px solid transparent;
         }
         .tab.active {
-            background-color: #007bff;
+            background-color: #1da1f2; /* Bleu de Twitter */
+            border-bottom: 2px solid #fff; /* Bordure inférieure */
         }
         .content {
             display: none;
             padding: 20px;
-            background-color: #444;
+            background-color: #192734; /* Fond légèrement plus clair */
             border-radius: 0 0 5px 5px;
         }
         .content.active {
@@ -54,45 +61,46 @@
         label {
             display: block;
             margin-bottom: 10px;
+            color: #8899a6; /* Couleur du texte pour les labels */
         }
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"], input[type="email"], input[type="password"], input[type="date"], input[type="submit"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
-            border: 1px solid #ccc;
+            border: 1px solid #38444d; /* Bordure légèrement plus foncée */
             border-radius: 5px;
-            background-color: #444;
+            background-color: #1c2938; /* Fond des champs de saisie */
             color: #fff;
         }
         button {
             display: block;
             width: 100%;
             padding: 10px;
-            background-color: #007bff;
+            background-color: #1da1f2; /* Bleu de Twitter */
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #0d8bf0; /* Bleu de Twitter (plus foncé) au survol */
         }
         .result {
             margin-top: 20px;
             padding: 20px;
-            background-color: #444;
+            background-color: #1c2938; /* Fond légèrement plus clair */
             border-radius: 5px;
         }
         .presentation {
             margin-top: 20px;
             padding: 20px;
-            background-color: #444;
+            background-color: #1c2938; /* Fond légèrement plus clair */
             border-radius: 5px;
         }
         .historique {
             margin-top: 20px;
             padding: 20px;
-            background-color: #444;
+            background-color: #1c2938; /* Fond légèrement plus clair */
             border-radius: 5px;
         }
     </style>
@@ -113,7 +121,17 @@
         <div id="presentation" class="content active">
             <div class="presentation">
                 <h2>Présentation de l'application</h2>
-                <p>Cette application vous permet de calculer le prix d'une course VTC en fonction de la distance parcourue et du temps estimé du trajet. Utilisez l'onglet "Calculer une course" pour obtenir la distance entre deux points et le temps de trajet, puis ajustez les tarifs kilométriques et horaires dans l'onglet "Paramètres".</p>
+                <p>Bienvenue sur le Calculateur de prix de course VTC !</p>
+                <p>Cette application a pour objectif de vous aider à estimer le prix d'une course de VTC en fonction de la distance parcourue et du temps estimé du trajet.</p>
+                <p>Comment ça fonctionne :</p>
+                <ul>
+                    <li>Utilisez l'onglet "Calculer une course" pour saisir l'adresse de départ et d'arrivée.</li>
+                    <li>Après avoir saisi les adresses, cliquez sur le bouton "Calculer le prix de la course".</li>
+                    <li>L'application utilisera les services de Google Maps pour estimer la distance et le temps du trajet.</li>
+                    <li>Vous pourrez ensuite ajuster les tarifs kilométriques et horaires dans l'onglet "Paramètres" si nécessaire.</li>
+                    <li>L'historique de vos courses sera disponible dans l'onglet "Historique".</li>
+                </ul>
+                <p>Le Calculateur de prix de course VTC est un outil simple et pratique pour les conducteurs de VTC et les utilisateurs à la recherche d'estimations de prix pour leurs trajets.</p>
             </div>
         </div>
 
@@ -191,8 +209,8 @@
                     var prixCourse = (distance * tarifKilometrique) + (temps * tarifHoraire);
                     document.getElementById('result').innerHTML = "<p>Le prix de la course est d'environ <strong>" + prixCourse.toFixed(2) + " €</strong>.</p>";
 
-                    // Afficher le bouton Waze
-                    document.getElementById('result').innerHTML += "<button onclick=\"ouvrirWaze('" + depart + "', '" + arrivee + "')\">Ouvrir dans Waze</button>";
+                    // Afficher le bouton Google Maps
+                    document.getElementById('result').innerHTML += "<button onclick=\"ouvrirGoogleMaps('" + depart + "', '" + arrivee + "')\">Ouvrir dans Google Maps</button>";
                 }
             });
         }
@@ -206,67 +224,6 @@
             alert('Tarifs enregistrés : Tarif kilométrique = ' + tarifKilometrique + ' €/km, Tarif horaire = ' + tarifHoraire + ' €/heure.');
         }
 
-        // Fonction d'ouverture de Waze
-        function ouvrirWaze(depart, arrivee) {
-            // Redirection vers Waze avec les coordonnées de départ et d'arrivée
-            var url = "https://www.waze.com/ul?ll=" + depart + "," + arrivee + "&navigate=yes";
-            window.open(url, "_blank");
-        }
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculateur de prix de course VTC</title>
-    <style>
-        /* Votre CSS ici */
-    </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"></script>
-</head>
-<body>
-    <div class="container">
-        <!-- Onglets -->
-        <!-- Contenu des onglets -->
-    </div>
-
-    <script>
-        // Fonction de calcul de prix de course
-        function calculerPrix() {
-            var depart = document.getElementById('depart').value;
-            var arrivee = document.getElementById('arrivee').value;
-            var tarifKilometrique = parseFloat(document.getElementById('tarifKilometrique').value);
-            var tarifHoraire = parseFloat(document.getElementById('tarifHoraire').value);
-
-            var request = {
-                origin: depart,
-                destination: arrivee,
-                travelMode: 'DRIVING'
-            };
-
-            var service = new google.maps.DistanceMatrixService();
-            service.getDistanceMatrix({
-                origins: [depart],
-                destinations: [arrivee],
-                travelMode: 'DRIVING',
-                unitSystem: google.maps.UnitSystem.METRIC,
-            }, function(response, status) {
-                if (status !== 'OK') {
-                    alert('Erreur : ' + status);
-                } else {
-                    var distance = parseFloat(response.rows[0].elements[0].distance.value) / 1000; // Conversion en kilomètres
-                    var temps = parseFloat(response.rows[0].elements[0].duration.value) / 3600; // Conversion en heures
-                    var prixCourse = (distance * tarifKilometrique) + (temps * tarifHoraire);
-                    document.getElementById('result').innerHTML = "<p>Le prix de la course est d'environ <strong>" + prixCourse.toFixed(2) + " €</strong>.</p>";
-
-                    // Afficher le bouton Google Maps
-                    document.getElementById('result').innerHTML += "<button onclick=\"ouvrirGoogleMaps('" + depart + "', '" + arrivee + "')\">Ouvrir dans Google Maps</button>";
-                }
-            });
-        }
-
         // Fonction d'ouverture de Google Maps avec départ et arrivée
         function ouvrirGoogleMaps(depart, arrivee) {
             // Redirection vers Google Maps avec les coordonnées de départ et d'arrivée
@@ -274,5 +231,6 @@
             window.open(url, "_blank");
         }
     </script>
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"></script>
 </body>
 </html>
