@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription et Connexion au site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #15202b; /* Fond sombre */
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #192734; /* Fond légèrement plus clair */
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .tab {
+            flex-grow: 1;
+            text-align: center;
+            padding: 10px;
+            background-color: #1da1f2; /* Bleu de Twitter */
+            color: #fff;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            background-color: #15202b; /* Fond sombre */
+            color: #1da1f2; /* Bleu de Twitter */
+            border-bottom: 2px solid #1da1f2; /* Bordure inférieure */
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background-color: #15202b; /* Fond sombre */
+            border-radius: 0 0 5px 5px;
+        }
+        .content.active {
+            display: block;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #8899a6; /* Couleur du texte pour les labels */
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #38444d; /* Bordure légèrement plus foncée */
+            border-radius: 5px;
+            background-color: #1c2938; /* Fond des champs de saisie */
+            color: #fff;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #1da1f2; /* Bleu de Twitter */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #0d8bf0; /* Bleu de Twitter (plus foncé) au survol */
+        }
+        p {
+            margin-bottom: 20px;
+        }
+        .switch-form {
+            text-align: center;
+        }
+        .switch-form a {
+            color: #1da1f2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Inscription et Connexion au site</h1>
+        
+        <!-- Onglets -->
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('presentation')">Présentation</div>
+            <div class="tab" onclick="openTab('inscription')">Inscription</div>
+            <div class="tab" onclick="openTab('connexion')">Connexion</div>
+        </div>
+
+        <!-- Contenu des onglets -->
+        <div id="presentation" class="content active">
+            <p>Bienvenue sur l'application Calculateur de prix de course VTC !</p>
+            <p>Cette application a pour objectif de vous aider à estimer le prix d'une course de VTC en fonction de la distance parcourue et du temps estimé du trajet.</p>
+            <p>Pour commencer, veuillez vous inscrire ou vous connecter ci-dessous.</p>
+        </div>
+
+        <div id="inscription" class="content">
+            <h2>Inscription au site</h2>
+            <form id="inscriptionForm">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" required>
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" required>
+                <label for="email">Adresse e-mail :</label>
+                <input type="email" id="email" name="email" required>
+                <label for="motDePasse">Mot de passe :</label>
+                <input type="password" id="motDePasse" name="motDePasse" required>
+                <button type="submit">S'inscrire</button>
+            </form>
+            <div class="switch-form">
+                <p>Vous avez déjà un compte ? <a href="#" onclick="switchForm()">Connectez-vous ici</a></p>
+            </div>
+        </div>
+
+        <div id="connexion" class="content">
+    <form id="connexionForm" action="connexion.php" method="post">
+        <label for="emailConnexion">Adresse e-mail :</label>
+        <input type="email" id="emailConnexion" name="emailConnexion" required>
+        <label for="motDePasseConnexion">Mot de passe :</label>
+        <input type="password" id="motDePasseConnexion" name="motDePasseConnexion" required>
+        <button type="submit">Se connecter</button>
+    </form>
+            <div class="switch-form">
+                <p>Vous n'avez pas de compte ? <a href="#" onclick="switchForm()">Inscrivez-vous ici</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+	
+        function openTab(tabName) {
+            var tabs = document.querySelectorAll('.tab');
+            var contents = document.querySelectorAll('.content');
+
+            tabs.forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            contents.forEach(function(content) {
+                content.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function switchForm() {
+            var inscriptionTab = document.getElementById('inscription');
+            var connexionTab = document.getElementById('connexion');
+            var inscriptionLink = document.querySelector('#inscription .switch-form a');
+            var connexionLink = document.querySelector('#connexion .switch-form a');
+
+            if (inscriptionTab.classList.contains('active')) {
+                inscriptionTab.classList.remove('active');
+                connexionTab.classList.add('active');
+                inscriptionLink.innerHTML = "Vous n'avez pas de compte ? Inscrivez-vous ici";
+                connexionLink.innerHTML = "Connectez-vous ici";
+            } else {
+                connexionTab.classList.remove('active');
+                inscriptionTab.classList.add('active');
+                connexionLink.innerHTML = "Vous avez déjà un compte ? Connectez-vous ici";
+                inscriptionLink.innerHTML = "Inscrivez-vous ici";
+            }
+        }
+
+        document.getElementById("inscriptionForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Empêcher le formulaire de se soumettre normalement
+
+            // Récupérer les données du formulaire d'inscription
+            var nom = document.getElementById("nom").value;
+            var prenom = document.getElementById("prenom").value;
+            var email = document.getElementById("email").value;
+            var motDePasse = document.getElementById("motDePasse").value;
+
+            // Ici, vous pouvez ajouter du code pour valider les données côté client
+
+            // Envoyer les données au backend pour enregistrement (non implémenté ici)
+
+            // Rediriger vers la page principale après une inscription réussie
+            window.location.href = "index.html";
+        });
+
+        document.getElementById("connexionForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Empêcher le formulaire de se soumettre normalement
+
+            // Récupérer les données du formulaire de connexion
+            var emailConnexion = document.getElementById("emailConnexion").value;
+            var motDePasseConnexion = document.getElementById("motDePasseConnexion").value;
+
+            // Ici, vous pouvez ajouter du code pour valider les données côté client
+
+            // Envoyer les données au backend pour vérification (non implémenté ici)
+
+            // Rediriger vers la page principale après une connexion réussie
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>
