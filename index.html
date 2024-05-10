@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de prix de course VTC</title>
+    <style>
+        /* CSS existant */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #15202b; /* Fond sombre */
+            color: #fff;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #192734; /* Fond légèrement plus clair */
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #fff;
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+        }
+        .tabs::-webkit-scrollbar { /* WebKit */
+            display: none;
+        }
+        .tab {
+            flex-grow: 1;
+            text-align: center;
+            padding: 10px;
+            background-color: #15202b; /* Fond sombre */
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        .tab.active {
+            background-color: #1da1f2; /* Bleu de Twitter */
+            border-bottom: 2px solid #fff; /* Bordure inférieure */
+        }
+        .content {
+            display: none;
+            padding: 20px;
+            background-color: #192734; /* Fond légèrement plus clair */
+            border-radius: 0 0 5px 5px;
+        }
+        .content.active {
+            display: block;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #8899a6; /* Couleur du texte pour les labels */
+        }
+        input[type="text"], input[type="number"], input[type="email"], input[type="password"], input[type="date"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #38444d; /* Bordure légèrement plus foncée */
+            border-radius: 5px;
+            background-color: #1c2938; /* Fond des champs de saisie */
+            color: #fff;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #1da1f2; /* Bleu de Twitter */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0d8bf0; /* Bleu de Twitter (plus foncé) au survol */
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #1c2938; /* Fond légèrement plus clair */
+            border-radius: 5px;
+        }
+        .presentation {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #1c2938; /* Fond légèrement plus clair */
+            border-radius: 5px;
+        }
+        .historique {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #1c2938; /* Fond légèrement plus clair */
+            border-radius: 5px;
+        }
+        /* Nouveau style pour le bouton de menu principal */
+        #menuButton {
+            width: 100%;
+            padding: 10px;
+            background-color: #1da1f2; /* Bleu de Twitter */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px; /* Espacement avec les onglets */
+        }
+        /* Style pour le bouton d'activation/désactivation du prix hors taxe */
+        #prixHorsTaxeButton {
+            padding: 10px;
+            background-color: #1da1f2; /* Bleu de Twitter */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        /* Style pour le bouton d'activation/désactivation du prix avec taxe */
+        #prixAvecTaxeButton {
+            padding: 10px;
+            background-color: #1da1f2; /* Bleu de Twitter */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        /* Style pour les boutons d'activation/désactivation */
+        .activeButton {
+            background-color: #0d8bf0; /* Bleu de Twitter (plus foncé) */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculateur de prix de course VTC</h1>
+        
+        <!-- Bouton de menu principal -->
+        <button id="menuButton" onclick="toggleTabs()">Menu Principal</button>
+
+        <!-- Onglets -->
+        <div class="tabs" id="tabs">
+            <div class="tab" onclick="openTab('presentation')">Présentation</div>
+            <div class="tab" onclick="openTab('course')">Calculer une course</div>
+            <div class="tab" onclick="openTab('parametres')">Paramètres</div>
+            <div class="tab" onclick="openTab('historique')">Historique</div>
+			<div class="tab" onclick="openTab('feedback')">Feedback</div>
+
+			
+        </div>
+
+        <!-- Contenu des onglets -->
+        <div id="presentation" class="content active">
+            <div class="presentation">
+                <h2>Présentation de l'application</h2>
+                <p>Bienvenue sur le Calculateur de prix de course VTC !</p>
+                <p>Cette application a pour objectif de vous aider à estimer le prix d'une course de VTC en fonction de la distance parcourue et du temps estimé du trajet.</p>
+                <p>Comment ça fonctionne :</p>
+                <ul>
+                    <li>Utilisez l'onglet "Calculer une course" pour saisir l'adresse de départ et d'arrivée.</li>
+                    <li>Après avoir saisi les adresses, cliquez sur le bouton "Calculer le prix de la course".</li>
+                    <li>L'application utilisera les services de Google Maps pour estimer la distance et le temps du trajet.</li>
+                    <li>Vous pourrez ensuite ajuster les tarifs kilométriques et horaires dans l'onglet "Paramètres" si nécessaire.</li>
+                    <li>L'historique de vos courses sera disponible dans l'onglet "Historique".</li>
+                </ul>
+                <p>Le Calculateur de prix de course VTC est un outil simple et pratique pour les conducteurs de VTC et les utilisateurs à la recherche d'estimations de prix pour leurs trajets.</p>
+            </div>
+        </div>
+
+        <div id="course" class="content">
+            <form id="courseForm">
+                <label for="depart">Départ (adresse ou lieu) :</label>
+                <input type="text" id="depart" name="depart" required>
+                <label for="arrivee">Arrivée (adresse ou lieu) :</label>
+                <input type="text" id="arrivee" name="arrivee" required>
+                <button type="button" onclick="calculerPrix()">Calculer le prix de la course</button>
+            </form>
+            <div class="result" id="result"></div>
+        </div>
+
+        <div id="parametres" class="content">
+    <form id="tarifsForm">
+        <label for="tarifKilometrique">Tarif kilométrique (€/km) :</label>
+        <input type="number" id="tarifKilometrique" name="tarifKilometrique" step="0.01" value="1.70" required>
+        <label for="tarifHoraire">Tarif horaire (€/heure) :</label>
+        <input type="number" id="tarifHoraire" name="tarifHoraire" step="0.01" value="36" required>
+        <label for="tva">TVA :</label>
+        <select id="tva" name="tva" onchange="updateTVA()">
+            <option value="0.10">10%</option>
+            <option value="0.20">20%</option>
+        </select>
+        <div>
+            <label for="prixHorsTaxe">Prix Hors Taxe :</label>
+            <input type="checkbox" id="prixHorsTaxe" name="prixHorsTaxe" checked onchange="togglePrixHorsTaxe()">
+            <label for="prixAvecTaxe">Prix Avec Taxe :</label>
+            <input type="checkbox" id="prixAvecTaxe" name="prixAvecTaxe" onchange="togglePrixAvecTaxe()">
+        </div>
+        <!-- Bouton d'enregistrement des paramètres -->
+        <button type="button" onclick="enregistrerParametres()">Enregistrer les paramètres</button>
+    </form>
+</div>
+
+<!-- Contenu de l'onglet Historique -->
+<div id="historique" class="content">
+    <div class="historique">
+        <h2>Historique des courses</h2>
+        <ul id="historiqueList"></ul> <!-- Liste pour afficher l'historique des courses -->
+    </div>
+</div>
+
+<!-- Contenu de l'onglet Feedback -->
+<div id="feedback" class="content">
+    <form id="feedbackForm" onsubmit="submitFeedback(event)">
+
+        <label for="feedbackMessage">Votre avis ou message :</label>
+        <textarea id="feedbackMessage" name="feedbackMessage" rows="4" required></textarea>
+        
+        <label for="feedbackEmail">Votre adresse e-mail :</label>
+        <input type="email" id="feedbackEmail" name="feedbackEmail" required>
+        
+        <button type="submit">Envoyer</button>
+    </form>
+
+    <div id="feedbackConfirmation" style="display: none;">
+        <p>Merci pour votre feedback !</p>
+    </div>
+</div>
+
+<script>
+    // Fonction pour envoyer le feedback
+    function submitFeedback(event) {
+    // Empêcher le comportement par défaut du formulaire
+    event.preventDefault();
+
+    // Ici, vous pouvez ajouter le code pour envoyer le feedback
+    // Après avoir envoyé le feedback avec succès, vous pouvez afficher le message de confirmation
+    document.getElementById('feedbackConfirmation').style.display = 'block';
+}
+
+// Variables pour stocker les états des boutons
+        var prixHorsTaxeActive = true;
+        var prixAvecTaxeActive = false;
+
+        // Fonction d'ouverture d'onglet
+        function openTab(tabName) {
+            var tabs = document.querySelectorAll('.tab');
+            var contents = document.querySelectorAll('.content');
+
+            tabs.forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            contents.forEach(function(content) {
+                content.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Fonction pour afficher ou masquer les onglets
+        function toggleTabs() {
+            var tabs = document.getElementById('tabs');
+            if (tabs.style.display === 'none') {
+                tabs.style.display = 'flex';
+            } else {
+                tabs.style.display = 'none';
+            }
+        }
+
+        // Fonction pour activer/désactiver le prix hors taxe
+        function togglePrixHorsTaxe() {
+            prixHorsTaxeActive = document.getElementById('prixHorsTaxe').checked;
+            prixAvecTaxeActive = !prixHorsTaxeActive;
+            document.getElementById('prixAvecTaxe').checked = !prixHorsTaxeActive;
+        }
+
+        // Fonction pour activer/désactiver le prix avec taxe
+        function togglePrixAvecTaxe() {
+            prixAvecTaxeActive = document.getElementById('prixAvecTaxe').checked;
+            prixHorsTaxeActive = !prixAvecTaxeActive;
+            document.getElementById('prixHorsTaxe').checked = !prixAvecTaxeActive;
+        }
+
+        // Fonction de calcul de prix de course
+    function calculerPrix() {
+        var depart = document.getElementById('depart').value;
+        var arrivee = document.getElementById('arrivee').value;
+        var tarifKilometrique = parseFloat(document.getElementById('tarifKilometrique').value);
+        var tarifHoraire = parseFloat(document.getElementById('tarifHoraire').value);
+
+        var request = {
+            origin: depart,
+            destination: arrivee,
+            travelMode: 'DRIVING'
+        };
+
+        var service = new google.maps.DistanceMatrixService();
+        service.getDistanceMatrix({
+            origins: [depart],
+            destinations: [arrivee],
+            travelMode: 'DRIVING',
+            unitSystem: google.maps.UnitSystem.METRIC,
+        }, function(response, status) {
+            if (status !== 'OK') {
+                alert('Erreur : ' + status);
+            } else {
+                var distance = parseFloat(response.rows[0].elements[0].distance.value) / 1000; // Conversion en kilomètres
+                var temps = parseFloat(response.rows[0].elements[0].duration.value); // Temps de trajet en secondes
+                var hours = Math.floor(temps / 3600);
+                var minutes = Math.floor((temps % 3600) / 60);
+                var timeString = '';
+                if (hours > 0) {
+                    timeString += hours + 'h ';
+                }
+                if (minutes > 0) {
+                    timeString += minutes + 'min';
+                }
+                
+                // Convertir le temps de trajet en heures pour obtenir le tarif horaire total
+                var tempsEnHeures = temps / 3600;
+
+                // Calculer le prix de la course en ajoutant le coût en fonction de la distance et du temps
+                var prixCourse = (distance * tarifKilometrique) + (tempsEnHeures * tarifHoraire);
+
+                document.getElementById('result').innerHTML = "<p>Le prix de la course est d'environ <strong>" + prixCourse.toFixed(2) + " €</strong>.</p>";
+                document.getElementById('result').innerHTML += "<p>Distance à parcourir : <strong>" + distance.toFixed(2) + " km</strong>.</p>";
+                document.getElementById('result').innerHTML += "<p>Temps de trajet estimé : <strong>" + timeString + "</strong>.</p>";
+
+                // Afficher le bouton Google Maps
+                document.getElementById('result').innerHTML += "<button onclick=\"ouvrirGoogleMaps('" + depart + "', '" + arrivee + "')\">Ouvrir dans Google Maps</button>";
+
+                // Enregistrer l'historique de la course
+                enregistrerHistorique(depart, arrivee, prixCourse.toFixed(2));
+            }
+        });
+    }
+
+
+        // Fonction d'enregistrement de l'historique des courses
+        function enregistrerHistorique(depart, arrivee, prix) {
+            // Récupérer la liste d'historique
+            var historiqueList = document.getElementById('historiqueList');
+
+            // Créer un nouvel élément de liste
+            var listItem = document.createElement('li');
+            listItem.textContent = 'De ' + depart + ' à ' + arrivee + ' : ' + prix + ' €';
+
+            // Ajouter l'élément à la liste
+            historiqueList.appendChild(listItem);
+        }
+
+        // Fonction d'enregistrement des tarifs
+        function enregistrerTarifs() {
+            var tarifKilometrique = parseFloat(document.getElementById('tarifKilometrique').value);
+            var tarifHoraire = parseFloat(document.getElementById('tarifHoraire').value);
+
+            // Enregistrer les tarifs dans une base de données ou un autre système de stockage
+            alert('Tarifs enregistrés : Tarif kilométrique = ' + tarifKilometrique + ' €/km, Tarif horaire = ' + tarifHoraire + ' €/heure.');
+        }
+
+        // Fonction d'ouverture de Google Maps avec départ et arrivée
+        function ouvrirGoogleMaps(depart, arrivee) {
+            // Redirection vers Google Maps avec les coordonnées de départ et d'arrivée
+            var url = "https://www.google.com/maps/dir/?api=1&origin=" + depart + "&destination=" + arrivee;
+            window.open(url, "_blank");
+        }
+    </script>
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMKS07R2hST0XZ-5drXaeZz2ea0MoGy9I&callback=initMap&v=weekly"></script>
+</body>
+</html>
